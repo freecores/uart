@@ -21,10 +21,14 @@
 --===========================================================================--
 -------------------------------------------------------------------------------
 -- Revision list
--- Version   Author                 Date                        Changes
+-- Version   Author                 Date           Changes
 --
--- 0.1      Ovidiu Lupas     15 January 2000                   New model
---        ovilup@mail.dnttm.ro
+-- 0.1      Ovidiu Lupas     15 January 2000       New model
+-- 1.0      Ovidiu Lupas     January  2000         Synthesis optimizations
+-- 2.0      Ovidiu Lupas     April    2000         Bugs removed - RSBusCtrl
+--          the RSBusCtrl did not process all possible situations
+--
+--        olupas@opencores.org
 -------------------------------------------------------------------------------
 -- Description    : The memory consists of a dual-port memory addressed by
 --                  two counters (RdCnt & WrCnt). The third counter (StatCnt)
@@ -127,7 +131,7 @@ begin
   -- Implements the controller for Rx&Tx units
   -----------------------------------------------------------------------------
   RSBusCtrl : process(SysClk,Reset,Read,Load)
-     variable StatM : unsigned(4 downto 0);
+     variable StatM : Std_Logic_Vector(4 downto 0);
   begin
      if Rising_Edge(SysClk) then
         if Reset = '0' then
@@ -144,6 +148,9 @@ begin
         end if;
         case StatM is
              when "00001" =>
+                  IntRx_N <= '0';
+                  CSReg(2) <= '1';
+             when "10001" =>
                   IntRx_N <= '0';
                   CSReg(2) <= '1';
              when "01000" =>
