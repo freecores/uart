@@ -23,7 +23,7 @@
 -- Version   Author                 Date                        Changes
 --
 -- 0.1      Ovidiu Lupas       15 January 2000                  New model
---        ovilup@mail.dnttm.ro
+--        olupas@opencores.org
 -------------------------------------------------------------------------------
 -- Description    : Generates the Baud clock and enable signals for RX & TX
 --                  units. 

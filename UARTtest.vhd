@@ -157,6 +157,7 @@ begin --======================== Architecture ========================--
   ProcCyc : process(Clk,IntRx_N,IntTx_N,Reset)
       variable counter : unsigned(3 downto 0);
       constant cone : unsigned(3 downto 0):= "0001";
+      variable temp : bit := '0';
   begin
      if Rising_Edge(Reset) then
         counter := "0000";
@@ -165,21 +166,38 @@ begin --======================== Architecture ========================--
           CS_N <= '1';
      elsif Rising_Edge(Clk) then
         if IntTx_N = '0' then
-           case counter is
-             when "0000" =>
-                   Addr <= "00";
-                   DataIn <= x"AA";
-                   WR_N <= '0';        
-                   CS_N <= '0';        
-                   counter := counter + cone;
-             when "0001" =>
-                   Addr <= "00";
-                   DataIn <= x"55";
-                   WR_N <= '0';        
-                   CS_N <= '0';        
-                   counter := "0000";
-             when others => null;
-           end case;
+           if temp = '0' then
+              temp := '1';
+              case counter is
+                 when "0000" =>
+                      Addr <= "00";
+                      DataIn <= x"AA";
+                      WR_N <= '0';        
+                      CS_N <= '0';        
+                      counter := counter + cone;
+                 when "0001" =>
+                      Addr <= "00";
+                      DataIn <= x"AF";
+                      WR_N <= '0';        
+                      CS_N <= '0';        
+                      counter := counter + cone;
+                 when "0010" =>
+                      Addr <= "00";
+                      DataIn <= x"55";
+                      WR_N <= '0';        
+                      CS_N <= '0';        
+                      counter := counter + cone;
+                 when "0011" =>
+                      Addr <= "00";
+                      DataIn <= x"E8";
+                      WR_N <= '0';        
+                      CS_N <= '0';        
+                      counter := "0000";
+                 when others => null;
+              end case;
+           elsif temp = '1' then
+              temp := '0';
+           end if;
         elsif IntRx_N = '0' then
            Addr <= "00";
            RD_N <= '0';
