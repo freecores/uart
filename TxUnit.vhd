@@ -23,7 +23,8 @@
 -- Version   Author                 Date                        Changes
 --
 -- 0.1      Ovidiu Lupas       15 January 2000                 New model
---        ovilup@mail.dnttm.ro
+-- 2.0      Ovidiu Lupas       17 April   2000    unnecessary variable removed
+--  olupas@opencores.org
 -------------------------------------------------------------------------------
 -- Description    : 
 -------------------------------------------------------------------------------
@@ -81,10 +82,10 @@ begin
            if ( tmpTBufE = '0') and (tmpTRegE = '1') then
               TReg <= TBuff;
               tmpTRegE <= '0';
-              tmp_TRegE := '0';
+--              tmp_TRegE := '0';
               tmpTBufE <= '1';
-           else
-              tmp_TRegE := tmpTRegE;
+--           else
+--              tmp_TRegE := tmpTRegE;
            end if;
 
            if tmpTRegE = '0' then
