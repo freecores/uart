@@ -23,7 +23,8 @@
 -- Version   Author                 Date                        Changes
 --
 -- 0.1      Ovidiu Lupas     15 January 2000                   New model
---        ovilup@mail.dnttm.ro
+-- 2.0      Ovidiu Lupas     17 April   2000  samples counter cleared for bit 0
+--        olupas@opencores.org
 -------------------------------------------------------------------------------
 -- Description    : Implements the receive unit of the miniUART core. Samples
 --                  16 times the RxD line and retain the value in the middle of
@@ -59,12 +60,12 @@ architecture Behaviour of RxUnit is
   -- Signals
   -----------------------------------------------------------------------------
   signal Start     : Std_Logic;             -- Syncro signal
-  signal tmpRxD    : Std_Logic;             -- 
-  signal tmpDRdy   : Std_Logic;             -- 
+  signal tmpRxD    : Std_Logic;             -- RxD buffer
+  signal tmpDRdy   : Std_Logic;             -- Data ready buffer
   signal outErr    : Std_Logic;             -- 
   signal frameErr  : Std_Logic;             -- 
   signal BitCnt    : Unsigned(3 downto 0);  -- 
-  signal SampleCnt : Unsigned(3 downto 0);  -- 
+  signal SampleCnt : Unsigned(3 downto 0);  -- samples on one bit counter
   signal ShtReg    : Std_Logic_Vector(7 downto 0);  --
   signal DOut      : Std_Logic_Vector(7 downto 0);  --
 begin
@@ -84,7 +85,6 @@ begin
            SampleCnt <= "0000";
            Start <= '0';
            tmpDRdy <= '0';
-           tmpRxD <= '1';
            frameErr <= '0';
            outErr <= '0';
 
@@ -108,11 +108,12 @@ begin
                  elsif tmpSampleCnt = 15 then
                     case tmpBitCnt is
                          when 0 =>
-                                if RxD = '1' then 
+                                if tmpRxD = '1' then -- Start Bit
                                    Start <= '0';
                                 else
                                    BitCnt <= BitCnt + CntOne;
                                 end if;
+                                SampleCnt <= SampleCnt + CntOne;
                          when 1|2|3|4|5|6|7|8 =>
                                 BitCnt <= BitCnt + CntOne;
                                 SampleCnt <= SampleCnt + CntOne;
