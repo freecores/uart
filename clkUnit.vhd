@@ -20,10 +20,11 @@
 --===========================================================================--
 -------------------------------------------------------------------------------
 -- Revision list
--- Version   Author                 Date                        Changes
+-- Version   Author              Date                Changes
 --
--- 0.1      Ovidiu Lupas       15 January 2000                  New model
---        olupas@opencores.org
+-- 1.0     Ovidiu Lupas      15 January 2000         New model
+-- 1.1     Ovidiu Lupas      28 May 2000     EnableRx/EnableTx ratio corrected
+--      olupas@opencores.org
 -------------------------------------------------------------------------------
 -- Description    : Generates the Baud clock and enable signals for RX & TX
 --                  units. 
@@ -120,8 +121,9 @@ begin
            when "01111" =>
                 tmpEnTX <= '1';
                 Cnt16 := Cnt16 + CntOne;
-           when "10010" =>
+           when "10001" =>
                 Cnt16 := "00000";
+                tmpEnTX <= '0';
            when others =>
                 tmpEnTX <= '0';
         end case;
